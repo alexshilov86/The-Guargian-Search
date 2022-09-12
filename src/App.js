@@ -1,23 +1,13 @@
-import logo from './logo.svg';
-import './App.css';
+import results from "./Results";
+import Search_table from "./Search_box";
+///apy-key-guardian = "db361477-2110-4756-ab04-d1ee6dee873c";
+//url = "https://content.guardianapis.com/search?api-key=" + apy-key-guardian
 
-function App() {
+function App() { 
+  
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div >
+      <Search_table data={results}/>
     </div>
   );
 }
