@@ -31,8 +31,17 @@
     margin-right: auto;
 }
 .nextbuttonvisible {
+    font-size: small;
     visibility: visible;
+    margin-bottom: 25px;
+    margin-left: 40%;
 }
 .nextbuttonunvisible {
+    visibility: hidden;
+}
+.arrowbackvisible{
+    visibility: visible;
+}
+.arrowbackunvisible{
     visibility: hidden;
 }

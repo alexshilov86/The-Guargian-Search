@@ -1,7 +1,7 @@
 import { React, useState } from "react";
 import './style.css';
 
-import { ArrowRightIcon } from '@chakra-ui/icons'
+import { ArrowRightIcon, ArrowForwardIcon, ArrowBackIcon } from '@chakra-ui/icons'
 import { Input, InputRightElement, Button, InputGroup } from '@chakra-ui/react'
 let apy_key_guardian = "db361477-2110-4756-ab04-d1ee6dee873c";
 function SearchBox(props) {
@@ -36,6 +36,7 @@ function InputSearch(props) {
                 <Input id="searchtext" placeholder='text for search' />
                 <InputRightElement width='4.5rem'>
                     <Button h='1.75rem' size='sm' onClick={() => {
+                        props.setcurrentpage(1);
                         let searchtext = document.getElementById('searchtext').value;
                         getDataFromApi(searchtext, props.handleClick, 1);
                     }}>
@@ -48,16 +49,22 @@ function InputSearch(props) {
 }
 function NextResults(props) {
     let class_name = props.visibility > 0 ? "nextbuttonvisible" : "nextbuttonunvisible";
+    let arrowbackclsname = props.page > 1 ? "arrowbackvisible" : "arrowbackunvisible";
     return (
         <div className={class_name}>
-            <span>Results {props.page * 10 - 9} - {props.page * 10} </span>
-            <Button className="button_next" onClick={() => {
+            <ArrowBackIcon className={arrowbackclsname} w={9} h={6} color="black.400" onClick={() => {
+                let newpage = Math.max(1, props.page - 1);
+                props.handleClick(newpage);
+                let searchtext = document.getElementById('searchtext').value;
+                getDataFromApi(searchtext, props.updateresults, newpage);
+            }} />
+            <span> Results {props.page * 10 - 9} - {props.page * 10} </span>
+            <ArrowForwardIcon w={9} h={6} color="black.400" onClick={() => {
                 props.handleClick(props.page + 1);
                 let searchtext = document.getElementById('searchtext').value;
                 getDataFromApi(searchtext, props.updateresults, props.page+1);
-            }}>
-                Next 10
-            </Button>
+            }} 
+            />
         </div>
     )
 }
@@ -67,7 +74,7 @@ function SearchTable(props) {
     const [result, setResult] = useState([]);
     return (
         <div className="searchtable">
-            <InputSearch handleClick={setResult} />
+            <InputSearch handleClick={setResult} setcurrentpage={setCurrentpage}/>
             <div className="findtable">
                 {result.map(e => <SearchBox data={e} />)}
             </div>
