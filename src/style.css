@@ -26,3 +26,13 @@
     margin-left: 5px;
     margin-right: 5px;
 }
+.button_next{
+    margin-left: auto;
+    margin-right: auto;
+}
+.nextbuttonvisible {
+    visibility: visible;
+}
+.nextbuttonunvisible {
+    visibility: hidden;
+}

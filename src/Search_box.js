@@ -1,6 +1,6 @@
-import React from "react";
+import { React, useState } from "react";
 import './style.css';
-import results from "./Results";
+
 import { ArrowRightIcon } from '@chakra-ui/icons'
 import { Input, InputRightElement, Button, InputGroup } from '@chakra-ui/react'
 let apy_key_guardian = "db361477-2110-4756-ab04-d1ee6dee873c";
@@ -19,8 +19,8 @@ function SearchBox(props) {
         </div>
     )
 }
-function getDataFromApi(searchtext, setData) {
-    let url = "https://content.guardianapis.com/search?q=" + searchtext + "&api-key=" + apy_key_guardian
+function getDataFromApi(searchtext, setData, page) {
+    let url = "https://content.guardianapis.com/search?page=" + page + "&q=" + searchtext + "&api-key=" + apy_key_guardian
     fetch(url)
         .then((response) => {
             return response.json();
@@ -28,7 +28,6 @@ function getDataFromApi(searchtext, setData) {
         .then((data) => {
             setData(data.response["results"]);
         });
-
 }
 function InputSearch(props) {
     return (
@@ -38,15 +37,7 @@ function InputSearch(props) {
                 <InputRightElement width='4.5rem'>
                     <Button h='1.75rem' size='sm' onClick={() => {
                         let searchtext = document.getElementById('searchtext').value;
-                        // let url = "https://content.guardianapis.com/search?q=" + searchtext + "&api-key=" + apy_key_guardian
-                        // fetch(url)
-                        //     .then((response) => {
-                        //         return response.json();
-                        //     })
-                        //     .then((data) => {
-                        //         props.handleClick(data.response["results"]);
-                        //     });
-                        getDataFromApi(searchtext, props.handleClick);
+                        getDataFromApi(searchtext, props.handleClick, 1);
                     }}>
                         Show
                     </Button>
@@ -55,14 +46,32 @@ function InputSearch(props) {
         </div>
     )
 }
+function NextResults(props) {
+    let class_name = props.visibility > 0 ? "nextbuttonvisible" : "nextbuttonunvisible";
+    return (
+        <div className={class_name}>
+            <span>Results {props.page * 10 - 9} - {props.page * 10} </span>
+            <Button className="button_next" onClick={() => {
+                props.handleClick(props.page + 1);
+                let searchtext = document.getElementById('searchtext').value;
+                getDataFromApi(searchtext, props.updateresults, props.page+1);
+            }}>
+                Next 10
+            </Button>
+        </div>
+    )
+}
 
 function SearchTable(props) {
+    const [currentpage, setCurrentpage] = useState(1);
+    const [result, setResult] = useState([]);
     return (
         <div className="searchtable">
-            <InputSearch handleClick={props.fillresults} />
+            <InputSearch handleClick={setResult} />
             <div className="findtable">
-                {props.data.map(e => <SearchBox data={e} />)}
+                {result.map(e => <SearchBox data={e} />)}
             </div>
+            <NextResults page={currentpage} handleClick={setCurrentpage} updateresults={setResult} visibility = {result.length}/>
         </div>
     )
 }
